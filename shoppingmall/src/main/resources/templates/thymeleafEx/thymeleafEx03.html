@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>타임리프 테스트 3</title>
+    <style>
+        .target{
+            background-color: beige;
+            color: coral;
+        }
+    </style>
+</head>
+<body>
+<h1>상품 테스트 출력 예제 3번</h1>
+<table border="1">
+    <thead>
+        <tr>
+            <th>순번</th>
+            <th>상품명</th>
+            <th>상세 설명</th>
+            <th>가격</th>
+            <th>등록일</th>
+            <th>판매 정보</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="itemDTO, status:${itemDtoList}"
+            th:class="${itemDTO.id % 3 == 0 ? 'target' : ''}">
+            <td th:text="${status.index}"></td>
+            <td th:text="${itemDTO.itemNm}"></td>
+            <td th:text="${itemDTO.itemDetail}"></td>
+            <td th:text="${itemDTO.price}"></td>
+            <td th:text="${itemDTO.regTime}"></td>
+            <td th:text="${itemDTO.sellStatCd}"></td>
+        </tr>
+    </tbody>
+</table>
+</body>
+</html>

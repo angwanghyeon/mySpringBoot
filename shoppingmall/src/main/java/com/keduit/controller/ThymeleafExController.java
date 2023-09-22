@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -94,5 +95,21 @@ public class ThymeleafExController {
         return "thymeleafEx/thymeleafEx07";
     }
 
-
+    @GetMapping("/exInline")
+    public String exInline(RedirectAttributes redirectAttributes){
+        System.out.println("......exInline.....");
+        ItemDto dto = new ItemDto();
+        dto.setItemDetail("상품 상세 설명");
+        dto.setItemNm("테스트 상품1");
+        dto.setPrice(10000);
+        dto.setRegTime(LocalDateTime.now());
+        redirectAttributes.addFlashAttribute("result", "success");
+        redirectAttributes.addFlashAttribute("dto", dto);
+        return "redirect:/thymeleaf/thymeleafEx08";
+    }
+    @GetMapping("/thymeleafEx08")
+    public String thymeleafEx08(){
+        System.out.println(".....ex08......");
+        return "/thymeleafEx/thymeleafEx08";
+    }
 }

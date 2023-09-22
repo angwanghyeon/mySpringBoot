@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>thymeleaf 테스트 2</title>
+</head>
+<body>
+<h1>테스트 상품 예제 샤샷</h1>
+<div>
+    상품명 : <span th:text="${result}"></span>
+</div>
+<div>
+    상품 상세 설명 : <span th:text="${dto}"></span>
+</div>
+<script th:inline="javascript">
+    const msg = [[${result}]]
+    const dto = [[${dto}]]
+</script>
+</body>
+</html>

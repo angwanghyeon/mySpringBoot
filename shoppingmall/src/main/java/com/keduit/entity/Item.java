@@ -1,22 +1,21 @@
 package com.keduit.entity;
 
 import com.keduit.constant.ItemSellStatus;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
+@ToString
 @Entity
 @Table
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Item {
+public class Item extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,10 +37,6 @@ public class Item {
     @Enumerated(EnumType.STRING)
     @Column(length = 50)
     private ItemSellStatus itemSellStatus; //상품 판매 상태
-
-    private LocalDateTime regTime; //등록 시간
-
-    private LocalDateTime updateTime; //수정 시간
 
     @ManyToMany
     @JoinTable(

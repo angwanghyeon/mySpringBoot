@@ -7,7 +7,7 @@ import javax.persistence.*;
 @Entity
 @Table
 @Data
-public class CartItem {
+public class CartItem extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,11 +15,11 @@ public class CartItem {
     private Long id;
 
     //JPA 문법이라고 생각해!!
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cart_id")
     private Cart cart;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
     private Item item;
 

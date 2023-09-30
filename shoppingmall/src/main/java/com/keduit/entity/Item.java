@@ -1,6 +1,7 @@
 package com.keduit.entity;
 
 import com.keduit.constant.ItemSellStatus;
+import com.keduit.dto.ItemFormDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -45,4 +46,12 @@ public class Item extends BaseEntity{
             inverseJoinColumns = @JoinColumn(name = "item_id")
     )
     private List<Member> members;
+
+    public void updateItem(ItemFormDto itemFormDto){
+        this.itemNm = itemFormDto.getItemNm();
+        this.price = itemFormDto.getPrice();
+        this.stockNumber = itemFormDto.getStockNumber();
+        this.itemDetail = itemFormDto.getItemDetail();
+        this.itemSellStatus = itemFormDto.getItemSellStatus();
+    }
 }

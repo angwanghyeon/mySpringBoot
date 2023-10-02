@@ -1,12 +1,14 @@
 package com.keduit.entity;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Data
+@Getter @Setter
 public class OrderItem extends BaseEntity{
 
     //마리아 DB랑 Mysql은 이렇게 줘야함
@@ -27,4 +29,21 @@ public class OrderItem extends BaseEntity{
 
     private int count; //수량
 
+    public static OrderItem createOrderItem(Item item, int count){
+        OrderItem orderItem = new OrderItem();
+        orderItem.setItem(item);
+        orderItem.setCount(count);
+        orderItem.setOrderPrice(item.getPrice());
+
+        item.removeStock(count);
+        return orderItem;
+    }
+
+    public int getTotalPrice(){
+        return orderPrice*count;
+    }
+
+    public void cancel(){
+        this.getItem().addStock(count);
+    }
 }

@@ -3,13 +3,18 @@ package com.keduit.entity;
 import com.keduit.constant.Role;
 import com.keduit.dto.MemberFormDto;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 
 @Entity
 @Table
-@Data
+@Getter
+@Setter
+@ToString
 public class Member extends BaseEntity{
 
     @Id

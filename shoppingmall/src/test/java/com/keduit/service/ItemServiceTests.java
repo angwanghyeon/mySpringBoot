@@ -44,7 +44,7 @@ public class ItemServiceTests {
             String imageName = "image"+i+".jpg";
             MockMultipartFile multipartFile =
                     new MockMultipartFile(path, imageName,
-                            "image/jpg", new byte[]{0,1,2,3,4});
+                            "image/jpg", new byte[]{1,2,3,4});
             multipartFileList.add(multipartFile);
         }
         return multipartFileList;

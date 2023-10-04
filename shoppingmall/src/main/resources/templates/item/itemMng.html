@@ -55,7 +55,7 @@
                 <td>
                     <a th:href="'/admin/item/'+${item.id}" th:text="${item.itemNm}"></a>
                 </td>
-                <td th:text="${item.itemSellStatus == T(com.keduit.constant.ItemSellStatus).SELL} ? '판매중' : '품절'"></td>
+                <td th:text="${item.itemSellStatus == T(com.keduit.constant.ItemSellStatus).SELL } ? '판매중' : '품절'"></td>
                 <td th:text="${item.createdBy}"></td>
                 <td th:text="${item.regTime}"></td>
             </tr>
@@ -71,7 +71,7 @@
                     </a>
                 </li>
 
-                <li class="page-item" th:each="page: ${#numbers.sequence(start, end)}" th:classappend="${items.number eq page-1}?'active':''">
+                <li class="page-item" th:each="page: ${#numbers.sequence(start, end)}" th:classappend="${items.number eq page - 1}?'active':''">
                     <a th:onclick="'javascript:page(' + ${page - 1} + ')'" th:inline="text" class="page-link">[[${page}]]</a>
                 </li>
 
@@ -105,7 +105,5 @@
             <button id="searchBtn" type="submit" class="btn btn-primary">검색</button>
         </div>
     </form>
-
 </div>
-
 </html>

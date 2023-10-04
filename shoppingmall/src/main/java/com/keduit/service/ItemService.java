@@ -51,12 +51,12 @@ public class ItemService {
         for (int i=0; i<itemImgFileList.size(); i++){
             ItemImg itemImg = new ItemImg();
             itemImg.setItem(item);
-            if (i == 0) {
+            if (i == 0)
                 itemImg.setRepimgYn("Y");
-            }else{
+            else
                 itemImg.setRepimgYn("N");
-                itemImgService.saveItemImg(itemImg, itemImgFileList.get(i));
-            }
+            itemImgService.saveItemImg(itemImg, itemImgFileList.get(i));
+
         }
         return item.getId();
     }

@@ -9,6 +9,7 @@ import com.keduit.entity.QItem;
 import com.keduit.entity.QItemImg;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -62,7 +63,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
     @Override
     public Page<Item> getAdminItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
 
-        QueryResults<Item> results = queryFactory
+        List<Item> content = queryFactory
                 .selectFrom(QItem.item)
                 .where(regDtsAfter(itemSearchDto.getSearchDateType()),
                         searchSellStatusEq(itemSearchDto.getSearchSellStatus()),
@@ -71,17 +72,21 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
                 .orderBy(QItem.item.id.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .fetchResults();
+                .fetch();
 
-        List<Item> content = results.getResults();
-        long total = results.getTotal();
+        long total = queryFactory.select(Wildcard.count)
+                .from(QItem.item)
+                .where(regDtsAfter(itemSearchDto.getSearchDateType()),
+                        searchSellStatusEq(itemSearchDto.getSearchSellStatus()),
+                        searchByLike(itemSearchDto.getSearchBy(),
+                                itemSearchDto.getSearchQuery()))
+                .fetchOne();
         return new PageImpl<>(content, pageable, total);
     }
 
     //mainPage
     private BooleanExpression itemNmLike(String searchQuery){
-        return StringUtils.isEmpty(searchQuery) ? null :
-                QItem.item.itemNm.like("%" + searchQuery + "%");
+        return StringUtils.isEmpty(searchQuery) ? null : QItem.item.itemNm.like("%" + searchQuery + "%");
     }
     @Override
     public Page<MainItemDto> getMainItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
@@ -89,7 +94,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
         QItem item = QItem.item;
         QItemImg itemImg = QItemImg.itemImg;
 
-        QueryResults<MainItemDto> results = queryFactory
+        List<MainItemDto> content = queryFactory
                 .select(
                         new QMainItemDto(
                                 item.id,
@@ -106,10 +111,15 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
                 .orderBy(item.id.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .fetchResults();
+                .fetch();
 
-        List<MainItemDto> content = results.getResults();
-        long total = results.getTotal();
+        long total = queryFactory
+                .select(Wildcard.count)
+                .from(itemImg)
+                .join(itemImg.item, item)
+                .where(itemImg.repimgYn.eq("Y"))
+                .where(itemNmLike(itemSearchDto.getSearchQuery()))
+                .fetchOne();
         return new PageImpl<>(content, pageable, total);
     }
 }

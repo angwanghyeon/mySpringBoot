@@ -40,6 +40,7 @@ public class OrderItem extends BaseEntity{
     }
 
     public int getTotalPrice(){
+        //this.orderPrice * this.count가 생략되어 있다
         return orderPrice*count;
     }
 

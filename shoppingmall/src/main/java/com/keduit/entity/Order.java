@@ -4,6 +4,7 @@ import com.keduit.constant.OrderStatus;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -29,12 +30,9 @@ public class Order extends BaseEntity{
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus; //주문 상태
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order" , cascade = CascadeType.ALL,
+    orphanRemoval = true)
     private List<OrderItem> orderItemList = new ArrayList<>();
-
-    private LocalDateTime regTime;
-
-    private LocalDateTime updateTime;
 
     public void addOrderItem(OrderItem orderItem){
         orderItemList.add(orderItem);
@@ -42,18 +40,26 @@ public class Order extends BaseEntity{
     }
 
     public static Order createOrder(Member member, List<OrderItem> orderItemList){
+        //인스턴스 하나 생성
         Order order = new Order();
+        //주문을 한 멤버 세팅
         order.setMember(member);
+        //가져온 list를 하나하나 나눠서 주문에 담는다
         for (OrderItem orderItem : orderItemList){
             order.addOrderItem(orderItem);
         }
+        //주문 상태를 설정
         order.setOrderStatus(OrderStatus.ORDER);
+        //주문 날짜 설정
         order.setOrderDate(LocalDateTime.now());
+
         return order;
     }
 
     public int getTotalPrice(){
+        //초기값이 0인 인스턴스 생성
         int totalPrice = 0;
+        //마찬가지로 만들어진 주문 리스트에서 각각 가져온 아이템 리스트 별 가격을 아이템에 담는다
         for (OrderItem orderItem : orderItemList){
             totalPrice += orderItem.getTotalPrice();
         }

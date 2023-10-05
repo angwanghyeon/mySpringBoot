@@ -108,6 +108,7 @@ public class ItemController {
 
     @GetMapping("/item/{itemId}")
     public String itemDtl(Model model, @PathVariable("itemId") Long itemId){
+        /*읽어온 Item을 화면에 전달 할 때는 DTO에 담아서 보내야 하므로 ItemFormDto를 호출함*/
         ItemFormDto itemFormDto = itemService.getItemDtl(itemId);
         model.addAttribute("item", itemFormDto);
         return "item/itemDtl";

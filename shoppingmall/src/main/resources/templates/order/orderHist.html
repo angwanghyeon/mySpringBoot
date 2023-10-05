@@ -13,15 +13,15 @@
 
   <script th:inline="javascript">
     function cancelOrder(orderId) {
-      var token = $("meta[name='_csrf']").attr("content");
-      var header = $("meta[name='_csrf_header']").attr("content");
+      let token = $("meta[name='_csrf']").attr("content");
+      let header = $("meta[name='_csrf_header']").attr("content");
 
-      var url = "/order/" + orderId + "/cancel";
-      var paramData = {
+      let url = "/order/" + orderId + "/cancel";
+      let paramData = {
         orderId : orderId,
       };
 
-      var param = JSON.stringify(paramData);
+      let param = JSON.stringify(paramData);
 
       $.ajax({
         url      : url,
@@ -125,13 +125,13 @@
     <ul class="pagination justify-content-center">
 
       <li class="page-item" th:classappend="${orders.number eq 0}?'disabled':''">
-        <a th:href="@{'/orders/' + ${orders.number-1}}" aria-label='Previous' class="page-link">
+        <a th:href="@{'/orders/' + ${orders.number -1}}" aria-label='Previous' class="page-link">
           <span aria-hidden='true'>Previous</span>
         </a>
       </li>
 
-      <li class="page-item" th:each="page: ${#numbers.sequence(start, end)}" th:classappend="${orders.number eq page-1}?'active':''">
-        <a th:href="@{'/orders/' + ${page-1}}" th:inline="text" class="page-link">[[${page}]]</a>
+      <li class="page-item" th:each="page: ${#numbers.sequence(start, end)}" th:classappend="${orders.number eq page -1}?'active':''">
+        <a th:href="@{'/orders/' + ${page -1}}" th:inline="text" class="page-link">[[${page}]]</a>
       </li>
 
       <li class="page-item" th:classappend="${orders.number+1 ge orders.totalPages}?'disabled':''">

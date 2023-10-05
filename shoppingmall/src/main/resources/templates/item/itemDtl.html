@@ -21,23 +21,23 @@
         });
 
         function calculateToalPrice(){
-            var count = $("#count").val();
-            var price = $("#price").val();
-            var totalPrice = price*count;
+            let count = $("#count").val();
+            let price = $("#price").val();
+            let totalPrice = price*count;
             $("#totalPrice").html(totalPrice + '원');
         }
 
         function order(){
-            var token = $("meta[name='_csrf']").attr("content");
-            var header = $("meta[name='_csrf_header']").attr("content");
+            let token = $("meta[name='_csrf']").attr("content");
+            let header = $("meta[name='_csrf_header']").attr("content");
 
-            var url = "/order";
-            var paramData = {
+            let url = "/order";
+            let paramData = {
                 itemId : $("#itemId").val(),
                 count : $("#count").val()
             };
 
-            var param = JSON.stringify(paramData);
+            let param = JSON.stringify(paramData);
 
             $.ajax({
                 url      : url,
@@ -68,16 +68,16 @@
         }
 
         function addCart(){
-            var token = $("meta[name='_csrf']").attr("content");
-            var header = $("meta[name='_csrf_header']").attr("content");
+            let token = $("meta[name='_csrf']").attr("content");
+            let header = $("meta[name='_csrf_header']").attr("content");
 
-            var url = "/cart";
-            var paramData = {
+            let url = "/cart";
+            let paramData = {
                 itemId : $("#itemId").val(),
                 count : $("#count").val()
             };
 
-            var param = JSON.stringify(paramData);
+            let param = JSON.stringify(paramData);
 
             $.ajax({
                 url      : url,

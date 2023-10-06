@@ -1,6 +1,7 @@
 package com.keduit.service;
 
 import com.keduit.constant.ItemSellStatus;
+import com.keduit.constant.OrderStatus;
 import com.keduit.dto.OrderDto;
 import com.keduit.entity.Item;
 import com.keduit.entity.Member;
@@ -72,6 +73,28 @@ public class OrderServiceTests {
         assertEquals(totalPrice, order.getTotalPrice());
     }
 
+    @Test
+    @DisplayName("주문 취소 테스트")
+    public void cancelOrderTest(){
+        //인스턴스 하나씩 생성
+        Item item = saveItem();
+        Member member = saveMember();
+
+        //아이템에 맞는 주문을 세팅한다.
+        OrderDto orderDto = new OrderDto();
+        orderDto.setItemId(item.getId());
+        orderDto.setCount(10);
+        //order를 만들어서 그 아이디를 가져온다.
+        Long orderId = orderService.order(orderDto, member.getEmail());
+        //아이디를 바탕으로 order를 하나 가져온다
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(EntityNotFoundException::new);
+        //취소한다.
+        orderService.cancelOrder(orderId);
+
+        assertEquals(OrderStatus.CANCEL, order.getOrderStatus());
+        assertEquals(100, item.getStockNumber());
+    }
 
 
 }

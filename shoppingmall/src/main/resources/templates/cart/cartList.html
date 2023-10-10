@@ -55,7 +55,10 @@
             var header = $("meta[name='_csrf_header']").attr("content");
 
             var url = "/cartItem/" + cartItemId+"?count=" + count;
-
+            if(count<=0){
+                alert("수량은 최소 1개 이상이어야 합니다.");
+                count=1;
+            }
             $.ajax({
                 url      : url,
                 type     : "PATCH",

@@ -6,6 +6,7 @@ import com.keduit.model.TodoEntity;
 import com.keduit.service.TodoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("todo")
+@RequestMapping("/todo")
 public class TodoController {
 
     @Autowired
@@ -34,14 +35,14 @@ public class TodoController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createTodo(@RequestBody TodoDto dto){
+    public ResponseEntity<?> createTodo(@RequestBody TodoDto dto,
+                @AuthenticationPrincipal String userid){
 
         try {
-            String tempUserId = "temporal-user";
 
             TodoEntity entity = TodoDto.toEntity(dto);
             entity.setId(null);
-            entity.setUserId(tempUserId);
+            entity.setUserId(userid);
             //서비스로부터 entity list를 가져옴
             List<TodoEntity> entities = todoService.create(entity);
             //entity list를 todoDto list로 변환(스트림을 활용)
@@ -64,12 +65,12 @@ public class TodoController {
     }
 
     @PutMapping
-    public ResponseEntity<?> updateTodo(@RequestBody TodoDto dto){
+    public ResponseEntity<?> updateTodo(@RequestBody TodoDto dto,
+                                        @AuthenticationPrincipal String userId){
 
-            String tempUserId = "temporal-user";
 
             TodoEntity entity = TodoDto.toEntity(dto);
-            entity.setUserId(tempUserId);
+            entity.setUserId(userId);
 
             List<TodoEntity> entities = todoService.update(entity);
             List<TodoDto> dtos = entities.stream().map(TodoDto::new)
@@ -78,6 +79,54 @@ public class TodoController {
                     .data(dtos)
                     .build();
             return ResponseEntity.ok().body(responseDto);
+    }
+
+    @DeleteMapping
+    public ResponseEntity<?> deleteTodo(@RequestBody TodoDto dto,
+                                        @AuthenticationPrincipal String userId) {
+
+        try {
+
+            //dto를 entity로 변환하는 method 사용
+            TodoEntity entity = TodoDto.toEntity(dto);
+            //만들어둔 entity에 userid를 우리가 위에서 만든 userid로 준다
+            entity.setUserId(userId);
+            //
+            List<TodoEntity> entities = todoService.delete(entity);
+            List<TodoDto> dtos = entities.stream().map(TodoDto::new)
+                    .collect(Collectors.toList());
+            ResponseDto<TodoDto> responseDto = ResponseDto.<TodoDto>builder()
+                    .data(dtos)
+                    .build();
+            return ResponseEntity.ok().body(responseDto);
+        } catch (Exception e) {
+            String error = e.getMessage();
+            ResponseDto<TodoDto> errorResponse = ResponseDto.<TodoDto>builder()
+                    .error(error)
+                    .build();
+            return ResponseEntity.badRequest().body(errorResponse);
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity<?> readTodo(@AuthenticationPrincipal String userId){
+    try {
+
+        List<TodoEntity> entities = todoService.read(userId);
+        List<TodoDto> dtos = entities.stream().map(TodoDto::new)
+                .collect(Collectors.toList());
+        ResponseDto<TodoDto> responseDto = ResponseDto.<TodoDto>builder()
+                .data(dtos)
+                .build();
+        return ResponseEntity.ok().body(responseDto);
+    }catch (Exception e){
+        String error = e.getMessage();
+        System.out.println("error = " + error);
+        ResponseDto<TodoDto> errorResponse = ResponseDto.<TodoDto>builder()
+                .error(error)
+                .build();
+        return ResponseEntity.badRequest().body(errorResponse);
+    }
     }
 
 }

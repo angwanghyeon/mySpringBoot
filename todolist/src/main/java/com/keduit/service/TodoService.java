@@ -59,4 +59,19 @@ public class TodoService {
         });
         return read(entity.getUserId());
     }
+
+    public List<TodoEntity> delete(final TodoEntity entity){
+        //먼저 entity를 한번 확인한다.
+        validate(entity);
+
+        try {
+            //jpa repository에 있는 delete 사용
+            todoRepository.delete(entity);
+        }catch (Exception e){
+            log.error("delete error 발생...", entity.getId(), e);
+            throw new RuntimeException("delete error 발생..." + entity.getId());
+        }
+
+        return read(entity.getUserId());
+    }
 }

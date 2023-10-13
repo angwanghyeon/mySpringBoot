@@ -1,6 +1,7 @@
 package com.keduit.config;
 
 import com.keduit.security.JwtAuthenticationFilter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -11,10 +12,11 @@ import org.springframework.web.filter.CorsFilter;
 
 @EnableWebSecurity
 @Slf4j
+@RequiredArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     /**
      * Spring Security를 설정하는 클래스입니다.
@@ -33,7 +35,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
 
                 // /와 /auth/** 경로에 대한 요청은 인증 없이 허용됩니다.
-                .authorizeRequests().antMatchers("/", "/auth/**").permitAll()
+                .authorizeRequests().antMatchers("/", "/auth/**", "/swagger-ui/**", "/swagger/**",
+                        "/swagger-resources/**", "/v3/api-docs", "/api/v3/**").permitAll()
 
                 // 그 외의 모든 요청은 인증을 필요로 합니다.
                 .anyRequest().authenticated();
